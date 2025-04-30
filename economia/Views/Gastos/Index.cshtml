@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Gasto>
+
+@{
+    ViewData["Title"] = "Tus movimientos";
+}
+
+
+<div class="container-fluid grow align-items-start">
+    <h1>Tus movimientos</h1>
+    <hr />
+    <table id="table"
+           data-toggle="table"
+           data-search="true"
+           data-searchable="true"
+           data-sort-name="Monto"
+           data-pagination="true"
+           data-page-size="20"
+           data-show-columns="true"
+           class="table table-responsive mx-auto">
+        <thead class="table-light">
+            <tr>
+                <th data-field="Monto"
+                    data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Monto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </th>
+                <th data-field="Fecha"
+                    data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Fecha)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Categoria)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Metodo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tipo)
+                </th>
+                <th>
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        S/. @Html.DisplayFor(modelItem => item.Monto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fecha)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Categoria.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Metodo.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tipo.Nombre)
+                    </td>
+                    <td>
+                        <a class="btn btn-warning text-white" asp-action="Edit" asp-route-id="@item.GastoId">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-action="Detalles" asp-controller="Gastos" class="col-1 mt-3 btn btn-primary">Regresar</a>
+</div>
+
+
+
+

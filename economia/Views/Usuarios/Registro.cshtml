@@ -1,0 +1,76 @@
+﻿@model economia.Models.ViewModels.RegistroViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="row align-items-center h-100">
+    <div class="col-6 align-items-center mx-auto">
+        <div class="card-body p-lg-3 w-100">
+            <h1>Crear usuario</h1>
+            <hr />
+            <form asp-action="Registro" method="post">
+                <div class="row g-3">
+                    <div class="col form-group mb-3">
+                        <label asp-for="Nombre"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                    </div>
+                    <div class="col form-group mb-3">
+                        <label asp-for="SegundoNombre"></label>
+                        <input asp-for="SegundoNombre" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col form-group mb-3">
+                        <label asp-for="ApellidoPaterno"></label>
+                        <input asp-for="ApellidoPaterno" class="form-control" />
+                    </div>
+                    <div class="col form-group mb-3">
+                        <label asp-for="ApellidoMaterno"></label>
+                        <input asp-for="ApellidoMaterno" class="form-control" required />
+                    </div>
+                </div>
+               
+                <div class="form-group mb-3">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" type="email" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username" class="form-control" required />
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" type="password" class="form-control" required />
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="RolId">Rol</label>
+                    <select 
+                        asp-for="RolId"
+                        asp-items="ViewBag.Roles"
+                        class="form-select" required>
+                    <option value="" disabled selected>
+                        Seleccione un rol
+                    </option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Crear usuario</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-4">
+        <img src="~/img/usuarios.webp" style="width: 100%" />
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

@@ -1,0 +1,50 @@
+﻿@model IEnumerable<economia.Models.Categoria>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container-fluid grow align-items-start mt-3">
+    <h1>Categorías</h1>
+    <hr />
+    <table <table id="tableCategorias"
+           data-toggle="table"
+           data-search="true"
+           data-searchable="true"
+           data-sort-name="Monto"
+           data-pagination="true"
+           data-page-size="20"
+           data-show-columns="true"
+           class="table table-responsive mx-auto">
+        <thead>
+            <tr>
+                <th data-sortable="true">
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        <a class="btn btn-warning text-white" asp-action="Edit" asp-route-id="@item.CategoriaId">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+     <a asp-action="Detalles" asp-controller="Gastos" class="col-1 mt-3 btn btn-primary">Regresar</a>
+</div>
+

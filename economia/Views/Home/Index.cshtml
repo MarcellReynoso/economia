@@ -1,0 +1,69 @@
+﻿@model economia.Models.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/login.styles.css" asp-append-version="true" />
+
+<!-- Fondo con altura total del viewport -->
+<div class="container-fluid py-5 min-vh-100 d-flex align-items-center justify-content-center" style="background-color: #344c64;">
+    <!-- Tarjeta centrada con ancho máximo -->
+    <div class="card mx-auto w-100" style="border-radius: 1rem; max-width: 900px;">
+        <div class="row g-0">
+            <!-- Imagen visible solo en pantallas medianas o más -->
+            <div class="d-none d-md-flex col-md-6 col-lg-5 justify-content-center align-items-center px-5">
+                <img src="~/img/economia.webp" alt="Imagen de login" class="img-fluid d-flex align-self-center" style="border-radius: 1rem 0 0 1rem;" />
+            </div>
+
+            <!-- Formulario -->
+            <div class="col-12 col-md-6 col-lg-7 d-flex align-items-center px-4 py-4">
+                <div class="card-body p-4 p-lg-5 text-black w-100">
+                    <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="d-flex align-items-start mb-3 pb-1">
+                            <span class="h1 fw-bold mb-0">Control de gastos</span>
+                        </div>
+
+                        <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 0.5px;">
+                            Ingresa tus credenciales
+                        </h5>
+
+                        <div class="form-outline mb-4">
+                            <label asp-for="Username" class="form-label"></label>
+                            <input asp-for="Username" type="text" class="form-control form-control-lg" />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" type="password" class="form-control form-control-lg" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="pt-1 mb-4">
+                            <button class="btn btn-dark w-100" type="submit">Iniciar sesión</button>
+                        </div>
+
+                        @if (ViewData["Mensaje"] != null)
+                        {
+                            <div class="text-danger" role="alertdialog">@ViewData["Mensaje"]</div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

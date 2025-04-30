@@ -1,0 +1,85 @@
+﻿@model economia.Models.ViewModels.GastoViewModel
+
+@{
+    ViewData["Title"] = "Editar Gasto";
+}
+
+<div class="row align-items-center">
+    <div class="col-6 align-items-center mx-auto">
+        <div class="card-body p-4 p-lg-5 w-100">
+            <h1>Editar movimiento</h1>
+            <hr />
+            <form asp-action="Edit">
+                <input type="hidden" asp-for="GastoId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="Monto" class="control-label"></label>
+                    <input asp-for="Monto"
+                           class="form-control"
+                           type="number"/>
+                    <span asp-validation-for="Monto" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="Fecha" class="control-label"></label>
+                    <input asp-for="Fecha"
+                           class="form-control"
+                           type="datetime-local"
+                           value='@DateTime.Now.ToString("yyyy-MM-dd hh:mm")' />
+                    <span asp-validation-for="Fecha" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="Descripcion" class="control-label"></label>
+                    <textarea asp-for="Descripcion"
+                              placeholder="(Opcional) Ingrese una descripción del movimiento"
+                              class="form-control"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="CategoriaId" class="control-label"></label>
+                    <select asp-for="CategoriaId"
+                            class="form-select"
+                            asp-items="ViewBag.CategoriaId">
+                        <option value="">Seleccione una categoría</option>
+                    </select>
+                    <span asp-validation-for="CategoriaId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="MetodoId" class="control-label"></label>
+                    <select asp-for="MetodoId"
+                            class="form-select"
+                            asp-items="ViewBag.MetodoId">
+                        <option value="">Seleccione un método de pago</option>
+                    </select>
+                    <span asp-validation-for="MetodoId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="TipoId" class="control-label"></label>
+                    <select asp-for="TipoId"
+                            class="form-select"
+                            asp-items="ViewBag.TipoId">
+                        <option value="">Seleccione ingreso o gasto</option>
+                    </select>
+                    <span asp-validation-for="TipoId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <input type="submit" value="Guardar cambios" class="btn btn-primary" />
+                    <a asp-action="Detalles" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-4">
+        <img src="~/img/registrar-gastos.webp" style="width: 100%" />
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

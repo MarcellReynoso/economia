@@ -1,0 +1,133 @@
+﻿@model IEnumerable<Gasto>
+
+@{
+    ViewData["Title"] = "Detalles";
+    var mensaje = TempData["Mensaje"] as string;
+}
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @mensaje
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="container-fluid grow align-items-start">
+    <h1>Bienvenido al sistema
+        <strong style="color: #577b8d;">@User.FindFirst("NombreCompleto")?.Value</strong>
+    </h1>
+    <div class="row d-flex justify-content-between mt-4 mb-4">
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="row" style="height: 200px;">
+                    <div class="row align-items-center" style="height:100%;">
+                        <div class="col-6 text-end">
+                            <span class="h1 mt-1">S/. @ViewBag.Total</span>
+                            <h5 class="card-title text-secondary">Total</h5>
+                        </div>
+                        <div class="col-6 d-flex justify-content-center align-items-center h-100" style="height: 100%">
+                            <img src="~/img/bolsa-de-dinero.png" height="120px" alt="Imagen de dinero" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="row" style="height: 200px;">
+                    <div class="row align-items-center">
+                        <div class="col-6 d-flex justify-content-center align-items-center h-100">
+                            <img class="" src="~/img/gastos.png" height="120px" alt="Imagen de dinero" />
+                        </div>
+                        <div class="col-6">
+                            <span class="h3">S/. @ViewBag.TotalGastos</span>
+                            <h5 class="card-title text-danger">Gastos</h5>
+                            <span class="h3">S/. @ViewBag.TotalIngresos</span>
+                            <h5 class="text-success">Ingresos</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-between mx-auto mt-4 mb-4">
+        <a asp-action="Create" asp-controller="Gastos" class="col-2 btn btn-success">
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+             <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+              </svg>
+              Nuevo movimiento
+        </a>
+        <a asp-action="Index" asp-controller="Gastos" class="col-2 btn btn-primary">Ver detalles</a>
+    </div>
+    <table  id="table"
+            data-toggle="table"
+            data-sort-name="Fecha"
+           data-sort-order="desc"
+            data-pagination="true"
+            data-page-size ="4"
+             class="table table-responsive mx-auto">
+        <thead class="table-light">
+            <tr>
+                <th
+                    data-field = "Monto"
+                    data-sortable = "true"
+                >
+                    @Html.DisplayNameFor(model => model.Monto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </th>
+                <th
+                    data-field ="Fecha"
+                    data-sortable ="true"
+                >
+                    @Html.DisplayNameFor(model => model.Fecha)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Categoria)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Metodo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tipo)
+                </th>
+                <th>
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                       S/. @Html.DisplayFor(modelItem => item.Monto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Fecha)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Categoria.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Metodo.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tipo.Nombre)
+                    </td>
+                    <td>
+                        <a class="btn btn-warning text-white" asp-action="Edit" asp-route-id="@item.GastoId">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
