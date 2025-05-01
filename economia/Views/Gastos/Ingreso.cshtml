@@ -1,0 +1,68 @@
+﻿@model economia.Models.ViewModels.IngresoViewModel
+
+@{
+    ViewData["Title"] = "Registrar Ingreso";
+}
+
+<div class="row align-items-center min-vh-100">
+    <div class="col-4">
+        <img src="~/img/ingresos.webp" style="width: 100%"/>
+    </div>
+    <div class="col-6 align-items-center mx-auto">
+        <div class="card-body p-lg-3 w-100">
+            <h1>Generar nuevo ingreso</h1>
+            <hr />
+            <form asp-action="Ingreso" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Monto"></label>
+                    <input asp-for="Monto" class="form-control" />
+                    <span asp-validation-for="Monto" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Fecha"></label>
+                    <input asp-for="Fecha"
+                           class="form-control"
+                           value='@DateTime.Now.ToString("yyyy-MM-dd hh:mm")'
+                           type="datetime-local" />
+                    <span asp-validation-for="Fecha" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Descripcion"></label>
+                    <textarea asp-for="Descripcion" placeholder="(Opcional) Ingrese una descripción del ingreso." class="form-control"></textarea>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="CategoriaId"></label>
+                    <select asp-for="CategoriaId" class="form-select" asp-items="ViewBag.Categorias">
+                        <option value="" disabled selected>Seleccione una categoría</option>
+                    </select>
+                    <span asp-validation-for="CategoriaId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="MetodoId"></label>
+                    <select asp-for="MetodoId" class="form-select" asp-items="ViewBag.Metodos">
+                        <option value="" disabled selected>Seleccione un método de pago</option>
+                    </select>
+                    <span asp-validation-for="MetodoId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Registrar ingreso</button>
+                    <a asp-action="Detalles" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

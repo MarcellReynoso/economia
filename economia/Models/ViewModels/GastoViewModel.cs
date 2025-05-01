@@ -29,7 +29,6 @@ namespace economia.Models.ViewModels
         [Display(Name = "Tipo de movimiento")]
         public int TipoId { get; set; }
 
-        [Required(ErrorMessage = "xxxx")]
         [Display(Name = "Usuario")]
         public int UsuarioId { get; set; }
 

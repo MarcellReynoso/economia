@@ -1,14 +1,12 @@
 ﻿@model economia.Models.ViewModels.GastoViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Nuevo gasto";
 }
 
-
-
-<div class="row align-items-center">
+<div class="row align-items-center min-vh-100">
     <div class="col-6 align-items-center mx-auto">
-        <div class="card-body p-4 p-lg-5 w-100">
+        <div class="card-body p-lg-3 w-100">
             <h1>Generar nuevo gasto</h1>
             <hr />
             <form asp-action="Create">
@@ -33,7 +31,7 @@
                 </div>
                 <div class="form-group mb-4">
                     <label asp-for="Descripcion" class="control-label"></label>
-                    <textarea asp-for="Descripcion" placeholder="(Opcional) Ingrese una descripción del movimiento" class="form-control"></textarea>
+                    <textarea asp-for="Descripcion" placeholder="(Opcional) Ingrese una descripción del gasto." class="form-control"></textarea>
                     <span asp-validation-for="Descripcion" class="text-danger"></span>
                 </div>
                 <div class="form-group mb-4">
@@ -49,12 +47,6 @@
                     <label asp-for="MetodoId" class="control-label"></label>
                     <select asp-for="MetodoId" class="form-select" asp-items="ViewBag.MetodoId"> 
                         <option value="" disabled selected>Seleccione un método de pago</option>
-                    </select>
-                </div>
-                <div class="form-group mb-4">
-                    <label asp-for="TipoId" class="control-label"></label>
-                    <select asp-for="TipoId" class="form-select" asp-items="ViewBag.TipoId">
-                        <option value="" disabled selected>Seleccione ingreso o gasto</option>
                     </select>
                 </div>
                 <div class="form-group mb-4">

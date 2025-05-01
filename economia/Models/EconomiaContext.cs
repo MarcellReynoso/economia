@@ -39,8 +39,19 @@ public partial class EconomiaContext : DbContext
                 .HasMaxLength(200)
                 .IsUnicode(false);
             entity.Property(e => e.Nombre)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.Tipo).WithMany(p => p.Categoria)
+                .HasForeignKey(d => d.TipoId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Categorias_Tipos");
+
+            entity.HasOne(d => d.Usuario).WithMany(p => p.Categoria)
+                .HasForeignKey(d => d.UsuarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Categorias_Usuarios");
         });
 
         modelBuilder.Entity<Gasto>(entity =>
@@ -75,6 +86,7 @@ public partial class EconomiaContext : DbContext
         modelBuilder.Entity<Metodo>(entity =>
         {
             entity.Property(e => e.Nombre)
+                .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
         });
@@ -87,6 +99,7 @@ public partial class EconomiaContext : DbContext
                 .HasMaxLength(200)
                 .IsUnicode(false);
             entity.Property(e => e.Nombre)
+                .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
         });
@@ -94,6 +107,7 @@ public partial class EconomiaContext : DbContext
         modelBuilder.Entity<Tipo>(entity =>
         {
             entity.Property(e => e.Nombre)
+                .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false);
         });
@@ -114,12 +128,14 @@ public partial class EconomiaContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Password)
+                .IsRequired()
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.SegundoNombre)
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Username)
+                .IsRequired()
                 .HasMaxLength(200)
                 .IsUnicode(false);
 

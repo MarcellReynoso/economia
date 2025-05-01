@@ -5,7 +5,7 @@
 }
 
 
-<div class="container-fluid grow align-items-start">
+<div class="container-fluid grow align-items-start mt-5">
     <h1>Tus movimientos</h1>
     <hr />
     <table id="table"
@@ -14,7 +14,7 @@
            data-searchable="true"
            data-sort-name="Monto"
            data-pagination="true"
-           data-page-size="20"
+           data-page-size="10"
            data-show-columns="true"
            class="table table-responsive mx-auto">
         <thead class="table-light">
@@ -73,7 +73,7 @@
             }
         </tbody>
     </table>
-    <a asp-action="Detalles" asp-controller="Gastos" class="col-1 mt-3 btn btn-primary">Regresar</a>
+    <a asp-action="Detalles" asp-controller="Gastos" class="col-1 mt-3 btn btn-secondary">Regresar</a>
 </div>
 
 

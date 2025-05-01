@@ -1,37 +1,44 @@
 ﻿@model economia.Models.Categoria
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar categoría";
 }
 
-<h1>Edit</h1>
-
-<h4>Categoria</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CategoriaId" />
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="row align-items-center min-vh-100">
+    <div class="col-7 align-items-center mx-auto">
+        <div class="card-body p-lg-3 w-100">
+            <h1>Editar categoría</h1>
+            <hr />
+            <form asp-action="Edit" >
+                <input type="hidden" asp-for="CategoriaId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group mb-3">
+                    <label asp-for="TipoId" class="control-label"></label>
+                    <select asp-for="TipoId" class="form-select" asp-items="ViewBag.TipoId">
+                        <option value="" disabled selected>Seleccione un tipo de movimiento</option>
+                    </select>
+                    <span asp-validation-for="TipoId" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Descripcion" class="control-label"></label>
+                    <textarea asp-for="Descripcion" placeholder="(Opcional) Ingresa una descripción." class="form-control"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <button type="submit" class="btn btn-primary">Editar categoría</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="col-5 d-flex justify-content-center align-items-center">
+        <img src="~/img/categorias.webp" width="80%" />
+    </div>
 </div>
 
 @section Scripts {

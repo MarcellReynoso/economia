@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using economia.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using economia.Models;
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace economia.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize]
     public class CategoriasController : Controller
     {
         private readonly EconomiaContext _context;
@@ -22,92 +19,111 @@ namespace economia.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categorias.ToListAsync());
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var categorias = await _context.Categorias
+                .Include(c => c.Tipo)
+                .Where(c => c.UsuarioId == usuarioId)
+                .ToListAsync();
+
+            return View(categorias);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
+            ViewBag.TipoId = new SelectList(_context.Tipos, "TipoId", "Nombre");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoriaId,Nombre,Descripcion")] Categoria categoria)
+        public async Task<IActionResult> Create(Categoria categoria)
         {
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            categoria.UsuarioId = usuarioId;
+
             if (ModelState.IsValid)
             {
                 _context.Add(categoria);
                 await _context.SaveChangesAsync();
+                TempData["MensajeCategoria"] = "Categoría registrada correctamente.";
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.TipoId = new SelectList(_context.Tipos, "TipoId", "Nombre", categoria.TipoId);
             return View(categoria);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var categoria = await _context.Categorias.FindAsync(id);
-            if (categoria == null)
-            {
-                return NotFound();
-            }
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var categoria = await _context.Categorias
+                .Where(c => c.CategoriaId == id && c.UsuarioId == usuarioId)
+                .FirstOrDefaultAsync();
+
+            if (categoria == null) return NotFound();
+
+            ViewBag.TipoId = new SelectList(_context.Tipos, "TipoId", "Nombre", categoria.TipoId);
             return View(categoria);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CategoriaId,Nombre,Descripcion")] Categoria categoria)
+        public async Task<IActionResult> Edit(int id, Categoria categoria)
         {
-            if (id != categoria.CategoriaId)
-            {
-                return NotFound();
-            }
+            if (id != categoria.CategoriaId) return NotFound();
+
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var categoriaExistente = await _context.Categorias
+                .Where(c => c.CategoriaId == id && c.UsuarioId == usuarioId)
+                .FirstOrDefaultAsync();
+
+            if (categoriaExistente == null) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(categoria);
+                    categoriaExistente.Nombre = categoria.Nombre;
+                    categoriaExistente.Descripcion = categoria.Descripcion;
+                    categoriaExistente.TipoId = categoria.TipoId;
+
+                    _context.Update(categoriaExistente);
                     await _context.SaveChangesAsync();
+                    TempData["MensajeCategoría"] = "Categoría actualizada correctamente.";
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoriaExists(categoria.CategoriaId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return BadRequest("Error de concurrencia.");
                 }
-                return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.TipoId = new SelectList(_context.Tipos, "TipoId", "Nombre", categoria.TipoId);
             return View(categoria);
         }
 
-        // POST: Categorias/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var categoria = await _context.Categorias
+                .Where(c => c.CategoriaId == id && c.UsuarioId == usuarioId)
+                .FirstOrDefaultAsync();
+
             if (categoria != null)
             {
                 _context.Categorias.Remove(categoria);
+                await _context.SaveChangesAsync();
+                TempData["MensajeCategoría"] = "Categoría eliminada.";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool CategoriaExists(int id)
-        {
-            return _context.Categorias.Any(e => e.CategoriaId == id);
         }
     }
 }

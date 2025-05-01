@@ -1,0 +1,107 @@
+﻿@model IEnumerable<economia.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Lista de usuarios";
+    var mensaje = TempData["MensajeUsuario"] as string;
+}
+
+<div class="container-fluid grow align-items-start mt-5">
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @mensaje
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <h1>Lista de usuarios</h1>
+    <hr />
+    <table class="table table-responsive mx-auto"
+           data-toggle="table"
+           data-search="true"
+           data-searchable="true"
+           data-sort-name="Monto"
+           data-pagination="true"
+           data-page-size="5"
+           data-show-columns="true">
+        <thead class="table-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SegundoNombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ApellidoPaterno)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ApellidoMaterno)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Password)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Username)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Activo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Rol)
+                </th>
+                <th class="d-flex justify-content-center">
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SegundoNombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Password)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Username)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Activo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rol.Nombre)
+                    </td>
+                    <td class="d-flex justify-content-center">
+                        <a asp-action="Editar" asp-route-id="@item.UsuarioId" class="btn btn-warning text-white">Editar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-action="Registro" asp-controller="Usuarios" class="col-1 btn btn-success">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+        </svg>
+        Crear
+    </a>
+    <a asp-action="Detalles" asp-controller="Gastos" class="col-1 btn btn-secondary">Regresar</a>
+</div>
+

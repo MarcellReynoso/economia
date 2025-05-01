@@ -1,0 +1,155 @@
+﻿@model economia.Models.ViewModels.RegistroViewModel
+
+@{
+    ViewData["Title"] = "Editar usuario";
+}
+
+<div class="row align-items-center min-vh-100">
+    <div class="col-6 align-items-center mx-auto">
+        <div class="card-body w-100">
+            <h1>Editar usuario</h1>
+            <hr />
+            <form asp-action="Editar" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input type="hidden" asp-for="UsuarioId" />
+
+                <div class="row g-3">
+                    <div class="col form-group mb-3">
+                        <label asp-for="Nombre"></label>
+                        <input asp-for="Nombre" class="form-control" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="col form-group mb-3">
+                        <label asp-for="SegundoNombre"></label>
+                        <input asp-for="SegundoNombre" class="form-control"/>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col form-group mb-3">
+                        <label asp-for="ApellidoPaterno"></label>
+                        <input asp-for="ApellidoPaterno" class="form-control" />
+                        <span asp-validation-for="ApellidoPaterno" class="text-danger"></span>
+                    </div>
+                    <div class="col form-group mb-3">
+                        <label asp-for="ApellidoMaterno"></label>
+                        <input asp-for="ApellidoMaterno" class="form-control"/>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" type="email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username" class="form-control" required />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <input type="hidden" id="PasswordHidden" name="Password" />
+                <input type="hidden" id="ConfirmPasswordHidden" name="ConfirmPassword" />
+
+                <div class="form-group mb-3">
+                    <button type="button" class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#cambiarContrasenaModal">
+                        Cambiar contraseña
+                    </button>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="RolId">Rol</label>
+                    <select asp-for="RolId"
+                            asp-items="ViewBag.Roles"
+                            class="form-select" required>
+                        <option value="" disabled selected>Seleccione un rol</option>
+                    </select>
+                    <span asp-validation-for="RolId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label d-block">Estado</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Activo" value="true" id="activo-true" />
+                        <label class="form-check-label" for="activo-true">Activo</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="Activo" value="false" id="activo-false" />
+                        <label class="form-check-label" for="activo-false">Inactivo</label>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <button type="submit" class="col btn btn-primary">Actualizar usuario</button>
+                    <a asp-action="Index" asp-controller="Usuarios" class="btn btn-secondary">Regresar</a>
+                </div>
+            </form>
+
+            @* Modal para cambiar contraseña *@
+
+            <div class="modal fade" id="cambiarContrasenaModal" tabindex="-1" aria-labelledby="cambiarContrasenaModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Cambiar contraseña</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group mb-3">
+                                <label for="PasswordModal">Nueva contraseña</label>
+                                <input type="password" id="PasswordModal" class="form-control" />
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="ConfirmPasswordModal">Confirmar contraseña</label>
+                                <input type="password" id="ConfirmPasswordModal" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="confirmarCambioContrasena()">Confirmar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-4">
+        <img src="~/img/usuarios.webp" style="width: 100%" />
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        function confirmarCambioContrasena() {
+            const password = document.getElementById("PasswordModal").value;
+            const confirmPassword = document.getElementById("ConfirmPasswordModal").value;
+
+            if (!password || !confirmPassword) {
+                alert("Por favor, complete ambos campos.");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert("Las contraseñas no coinciden.");
+                return;
+            }
+
+            // Copiar a los campos ocultos del formulario principal
+            document.getElementById("PasswordHidden").value = password;
+            document.getElementById("ConfirmPasswordHidden").value = confirmPassword;
+
+            // Cerrar el modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById("cambiarContrasenaModal"));
+            modal.hide();
+
+            alert("Contraseña actualizada correctamente.");
+        }
+    </script>
+}

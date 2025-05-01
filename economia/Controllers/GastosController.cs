@@ -70,10 +70,10 @@ namespace economia.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.CategoriaId = new SelectList(_context.Categorias, "CategoriaId", "Nombre");
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            ViewBag.CategoriaId = new SelectList(_context.Categorias
+                .Where(c => c.TipoId == 2 && c.UsuarioId == usuarioId), "CategoriaId", "Nombre");
             ViewBag.MetodoId = new SelectList(_context.Metodos, "MetodoId", "Nombre");
-            ViewBag.TipoId = new SelectList(_context.Tipos, "TipoId", "Nombre");
-
             return View();
         }
 
@@ -93,7 +93,7 @@ namespace economia.Controllers
                     UsuarioId = userId,
                     CategoriaId = model.CategoriaId,
                     MetodoId = model.MetodoId,
-                    TipoId = model.TipoId,
+                    TipoId = 2,
                     Monto = model.Monto,
                     Descripcion = model.Descripcion,
                     Fecha = model.Fecha
@@ -107,7 +107,6 @@ namespace economia.Controllers
             // Si algo falla, recargamos las listas de nuevo
             ViewBag.CategoriaId = new SelectList(_context.Categorias, "CategoriaId", "Nombre", model.CategoriaId);
             ViewBag.MetodoId = new SelectList(_context.Metodos, "MetodoId", "Nombre", model.MetodoId);
-            ViewBag.TipoId = new SelectList(_context.Tipos, "TipoId", "Nombre", model.TipoId);
 
             return View(model);
         }
@@ -172,6 +171,7 @@ namespace economia.Controllers
                     gastoExistente.Fecha = gasto.Fecha;
                     gastoExistente.TipoId = gasto.TipoId;
 
+                    TempData["Mensaje"] = "Movimiento editado correctamente.";
                     _context.Update(gastoExistente);
                     await _context.SaveChangesAsync();
                 }
@@ -189,5 +189,46 @@ namespace economia.Controllers
 
             return View(gasto);
         }
+
+        [HttpGet]
+        public IActionResult Ingreso()
+        {
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            ViewBag.Categorias = new SelectList(_context.Categorias
+                .Where(c => c.TipoId == 1 && c.UsuarioId == usuarioId), "CategoriaId", "Nombre");
+            ViewBag.Metodos = new SelectList(_context.Metodos, "MetodoId", "Nombre");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Ingreso(IngresoViewModel model)
+        {
+            if (ModelState.IsValid) 
+            {
+                var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+                var ingreso = new Gasto
+                {
+                    UsuarioId = usuarioId,
+                    CategoriaId = model.CategoriaId,
+                    MetodoId = model.MetodoId,
+                    TipoId = 1,
+                    Monto = model.Monto,
+                    Descripcion = model.Descripcion,
+                    Fecha = model.Fecha
+                };
+
+                await _context.AddAsync(ingreso);
+                await _context.SaveChangesAsync();
+                TempData["MensajeIngreso"] = "Ingreso registrado correctamente.";
+                return RedirectToAction("Detalles", "Gastos");
+            }
+            ViewBag.CategoriaId = new SelectList(_context.Categorias, "CategoriaId", "Nombre", model.CategoriaId);
+            ViewBag.MetodoId = new SelectList(_context.Metodos, "MetodoId", "Nombre", model.MetodoId);
+
+            return View(model);
+        }
+
     }
 }
