@@ -230,5 +230,47 @@ namespace economia.Controllers
             return View(model);
         }
 
+
+        //Gráficos
+        public async Task<IActionResult> Reportes()
+        {
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var porCategoria = await _context.Gastos
+                .Where(g => g.UsuarioId == usuarioId && g.TipoId == 2)
+                .Include(g => g.Categoria)
+                .GroupBy(g => g.Categoria.Nombre)
+                .Select(g => new GastoPorCategoriaViewModel
+                {
+                    Categoria = g.Key,
+                    Total = g.Sum(x => x.Monto)
+                })
+                .ToListAsync();
+
+            var porFecha = await _context.Gastos
+                .Where(g => g.UsuarioId == usuarioId && g.TipoId == 2)
+                .GroupBy(g => g.Fecha.Date)
+                .OrderBy(g => g.Key)
+                .Select(g => new GastoPorFechaViewModel
+                {
+                    Fecha = g.Key,
+                    Total = g.Sum(x => x.Monto)
+                })
+                .ToListAsync();
+
+            var totalGastos = porFecha.Sum(x => x.Total);
+            var diasConGasto = porFecha.Count();
+
+            DashboardViewModel dashboardViewModel = new DashboardViewModel()
+            {
+                PorCategoria = porCategoria,
+                PorFecha = porFecha,
+                TotalGastos = totalGastos,
+                PromedioDiario = diasConGasto > 0 ? totalGastos/diasConGasto : 0
+            };
+
+            return View(dashboardViewModel);
+        }
+
     }
 }

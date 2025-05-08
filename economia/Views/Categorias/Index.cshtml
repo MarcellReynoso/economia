@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Categorías";
-    var mensaje = TempData["MensajeCategoría"] as string;
+    var mensaje = TempData["MensajeCategoria"] as string;
 }
 
 <div class="container-fluid grow align-items-start mt-5">
@@ -27,7 +27,7 @@
         <thead class="table-light">
             <tr>
                 <th data-sortable="true">
-                    @Html.DisplayNameFor(model => model.Nombre)
+                    Nombre
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Descripcion)

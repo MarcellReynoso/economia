@@ -1,0 +1,123 @@
+﻿@model DashboardViewModel
+@using DevExtreme.AspNet.Mvc
+@using economia.Models.ViewModels
+
+<div class="container-fluid grow row justify-content-center align-items-center min-vh-100">
+@*     <div class="row">
+        <h1 class="">
+            Conoce tus movimientos
+            <strong style="color: #577b8d;">@User.FindFirst("NombreCompleto")?.Value</strong>
+        </h1>
+    </div> *@
+    <div class="row text-center align-items-center mb-4">
+        <div class="col-md-4">
+
+            @* Total de gastos *@
+            @* <div class="p-4 bg-light rounded shadow-sm mb-5">
+                <h5 class="text-muted">Total de Gastos</h5>
+                <h2 class="text-dark">S/ @Model.TotalGastos.ToString("N2")</h2>
+            </div> *@
+
+            @* Promedio diario *@
+            @* <div class="p-4 bg-light rounded shadow-sm">
+                <h5 class="text-muted">Promedio Diario</h5>
+                <h2 class="text-primary">S/ @Model.PromedioDiario.ToString("N2")</h2>
+            </div> *@
+
+        </div>
+
+        @* Gastos históricos *@
+        <div class="col-md-12">
+            @(Html.DevExtreme().Chart()
+                .ID("gastoTiempoChart")
+                .DataSource(Model.PorFecha)
+                .Title(t => t.Text("Gastos históricos"))
+                .Series(s =>
+                {
+                    s.Add()
+                        .ArgumentField("Fecha")
+                        .ValueField("Total")
+                        .Color("#344c64");
+                })
+                .ArgumentAxis(a => a
+                .ArgumentType(ChartDataType.DateTime)
+                .Label(l => l.Format("dd MMM"))
+                )
+                .ValueAxis(v => v
+                .Add().Title(t => t.Text("Monto en S/."))
+                )
+                .Legend(l => l.Visible(false))
+                .Export(e => e.Enabled(true))
+                .Tooltip(t => t
+                .Enabled(true)
+                .Format(f => f.Type(Format.FixedPoint).Precision(2))
+                )
+                )
+        </div>
+    </div>
+
+    <div class="row text-center align-items-center" style="height:30%">
+        @* Gastos por categoría en barra *@
+        <div class="col-md-8" style="max-width: 800px;">
+            @(Html.DevExtreme().Chart()
+                .ID("gastoCategoriaChart")
+                .DataSource(Model.PorCategoria)
+                .Title(t => t.Text("Gastos por categoría"))
+                .Series(s =>
+                {
+                    s.Add()
+                    .ArgumentField("Categoria")
+                    .ValueField("Total")
+                    .Type(SeriesType.Bar)
+                    .Color("#344c64")
+                    .Label(l => l
+                        .Visible(true)
+                        .Position(RelativePosition.Outside)
+                        .Format(f => f.Type(Format.FixedPoint).Precision(2))
+                    );
+                })
+                .ValueAxis(v => v
+                .Add().Title(t => t.Text("Monto en S/."))
+                )
+                .Legend(l => l.Visible(false))
+                .Export(e => e.Enabled(true))
+                .Tooltip(t => t
+                .Enabled(true)
+                .Format(f => f.Type(Format.FixedPoint).Precision(2))
+                )
+                )
+        </div>
+
+        @* Gastos por categoría circular *@
+        <div class="col-md-4 mx-auto" style="max-width: 800px;">
+            @(Html.DevExtreme().PieChart()
+                .ID("gastoPieChart")
+                .DataSource(Model.PorCategoria)
+                .Title(t => t.Text("Distribución de gastos x Categoría"))
+                .Series(s => s
+                    .Add()
+                    .ArgumentField("Categoria")
+                    .ValueField("Total")
+                    .Label(l=>l
+                        .Visible(true)
+                        .Position(PieChartLabelPosition.Inside)
+                        .BackgroundColor("none")
+                        .Font(f=>f
+                            .Color("black")
+                            .Weight(600)
+                            .Size(16)
+                        )
+                        .CustomizeText(@<text>
+                            function(info) {
+                                return info.percentText;
+                                }
+                            </text>)
+                        )
+                    )
+                .Legend(l => l.Visible(true).HorizontalAlignment(HorizontalAlignment.Right).VerticalAlignment(VerticalEdge.Top))
+                )
+        </div>
+    </div>
+</div>
+
+

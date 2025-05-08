@@ -69,6 +69,25 @@ namespace economia.Controllers
 
                 await _context.Usuarios.AddAsync(usuario);
                 await _context.SaveChangesAsync();
+
+                // Agregar categorías por defecto (no replicar en otros proyectos)
+                var categoriasPorDefecto = new List<Categoria>
+                {
+                    new Categoria { 
+                        Nombre = "Movilidad", 
+                        UsuarioId = usuario.UsuarioId, 
+                        TipoId = 2 
+                    },
+                    new Categoria { 
+                        Nombre = "Comida", 
+                        UsuarioId = usuario.UsuarioId, 
+                        TipoId = 2 
+                    }
+                };
+                await _context.Categorias.AddRangeAsync(categoriasPorDefecto);
+                await _context.SaveChangesAsync();
+                ////////////////////////////////////////////////////////////////////
+
                 TempData["MensajeUsuario"] = "Usuario registrado correctamente.";
                 return RedirectToAction("Index", "Usuarios");
             }
@@ -143,6 +162,32 @@ namespace economia.Controllers
             }
             ViewBag.Roles = new SelectList(_context.Roles.ToList(), "RolId", "Nombre");
             return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CambiarPasswordPropia(string Password, string ConfirmPassword)
+        {
+            if (string.IsNullOrWhiteSpace(Password) || Password != ConfirmPassword)
+            {
+                TempData["Error"] = "Las contraseñas no coinciden o están vacías.";
+                return RedirectToAction("Detalles", "Gastos");
+            }
+
+            var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.UsuarioId == usuarioId);
+
+            if (usuario == null)
+            {
+                TempData["Error"] = "Usuario no encontrado.";
+                return RedirectToAction("Detalles", "Gastos");
+            }
+
+            usuario.Password = Password; // ← aún sin encriptar, lo mantendremos simple
+            await _context.SaveChangesAsync();
+
+            TempData["Mensaje"] = "Contraseña actualizada exitosamente.";
+            return RedirectToAction("Detalles", "Gastos");
         }
     }
 }

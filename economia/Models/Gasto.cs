@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace economia.Models;
 
@@ -17,6 +18,7 @@ public partial class Gasto
 
     public string Descripcion { get; set; }
 
+    [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
     public DateTime Fecha { get; set; }
 
     public int TipoId { get; set; }

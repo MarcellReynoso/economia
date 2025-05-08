@@ -15,6 +15,21 @@
         </div>
     }
 
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <h1>Bienvenido al sistema
         <strong style="color: #577b8d;">@User.FindFirst("NombreCompleto")?.Value</strong>
     </h1>
@@ -61,7 +76,7 @@
             data-sort-order="desc"
             data-pagination="true"
             data-page-size ="4"
-            class="table table-responsive mx-auto">
+            class="table table-responsive mx-auto mb-4">
         <thead class="table-light">
             <tr>
                 <th
@@ -71,7 +86,7 @@
                     @Html.DisplayNameFor(model => model.Monto)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Descripcion)
+                    Descripción
                 </th>
                 <th
                     data-field ="Fecha"
@@ -80,10 +95,10 @@
                     @Html.DisplayNameFor(model => model.Fecha)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Categoria)
+                    Categoría
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Metodo)
+                    Método
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Tipo)
@@ -124,4 +139,9 @@
     </table>
 </div>
 
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2025 - Marcell Alessandro Reynoso Flores
+    </div>
+</footer>
 
